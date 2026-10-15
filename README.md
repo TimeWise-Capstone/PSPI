@@ -15,7 +15,7 @@ Each page lives in `src/pages/` and is owned by one team member. The sidebar nav
 
 | Page | File | Owner |
 | --- | --- | --- |
-| Dashboard (main page) | `MainDashboard.jsx` | Zain |
+| Dashboard (main page) | `MainDashboard.jsx` | Zain/Nawaf |
 | Courses (FA1) | `AcademicIntake.jsx` | Marcel |
 | Study Plan (FA2) | `TaskPriority.jsx` | Nawaf |
 | Analytics (FA3) | `Dashboard.jsx` | Rowan |
