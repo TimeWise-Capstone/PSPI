@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TimeWise - Recommended Learning Resources</title>
+  <style>
+    :root { --bg:#f7f7f7; --panel:#ffffff; --border:#c9c9c9; --border-dark:#8d8d8d; --text:#222; --muted:#666; --soft:#ececec; --active:#dedede; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text); }
+    .app { width:1365px; min-height:768px; margin:0 auto; background:var(--panel); border:1px solid var(--border-dark); display:grid; grid-template-columns:220px 1fr; grid-template-rows:70px 1fr; }
+    .topbar { grid-column:1 / 3; display:flex; align-items:center; justify-content:space-between; padding:0 28px; border-bottom:1px solid var(--border-dark); background:#fff; }
+    .brand { display:flex; align-items:center; gap:12px; font-weight:700; font-size:24px; }
+    .clock { width:34px; height:34px; border:2px solid #333; border-radius:50%; position:relative; }
+    .clock::before { content:""; position:absolute; width:2px; height:9px; background:#333; left:15px; top:7px; }
+    .clock::after { content:""; position:absolute; width:10px; height:2px; background:#333; left:15px; top:16px; transform:rotate(25deg); transform-origin:left center; }
+    .profile { border:1px solid var(--border-dark); border-radius:6px; padding:10px 14px; font-size:14px; background:#fff; }
+    .sidebar { grid-row:2; border-right:1px solid var(--border-dark); padding:20px 14px; background:#fafafa; }
+    .nav-title { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin:4px 10px 10px; }
+    .nav a { display:block; text-decoration:none; color:var(--text); border:1px solid transparent; padding:12px 14px; margin-bottom:6px; border-radius:5px; font-size:15px; }
+    .nav a:hover { border-color:var(--border); }
+    .nav a.active { background:var(--active); border-color:var(--border-dark); font-weight:700; }
+    .content { grid-column:2; grid-row:2; padding:28px 34px 34px; background:#fff; }
+    .page-head { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:20px; }
+    h1 { margin:0 0 6px; font-size:30px; }
+    .subtext { color:var(--muted); font-size:15px; line-height:1.45; max-width:760px; }
+    .btn { display:inline-block; border:1px solid var(--border-dark); background:#fff; color:var(--text); text-decoration:none; border-radius:5px; padding:10px 14px; font-weight:700; font-size:14px; cursor:pointer; white-space:nowrap; }
+    .btn.primary { background:var(--soft); }
+    .btn.small { padding:7px 10px; font-size:12px; }
+    .panel { border:1px solid var(--border-dark); border-radius:6px; padding:18px; background:#fff; }
+    .panel h2 { margin:0 0 8px; font-size:18px; }
+    .panel-subtext { color:var(--muted); font-size:13px; margin-bottom:16px; line-height:1.45; }
+    .main-grid { display:grid; grid-template-columns:1.2fr 0.8fr; gap:18px; align-items:start; }
+    .field { margin-bottom:16px; }
+    .field label { display:block; font-size:13px; font-weight:700; margin-bottom:6px; }
+    .input { border:1px solid var(--border-dark); border-radius:5px; padding:11px 12px; font-size:14px; background:#fff; color:var(--text); }
+    .input.placeholder { color:var(--muted); }
+    .textarea { min-height:84px; }
+    .help { color:var(--muted); font-size:12px; margin-top:5px; line-height:1.4; }
+    .chips { display:flex; flex-wrap:wrap; gap:8px; }
+    .chip { border:1px solid var(--border-dark); border-radius:999px; padding:7px 13px; font-size:13px; background:#fff; }
+    .chip.selected { background:var(--active); font-weight:700; }
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .card { border:1px solid var(--border); border-radius:5px; padding:14px; background:#fafafa; margin-bottom:12px; }
+    .card-title { font-weight:700; margin-bottom:4px; }
+    .card-meta { color:var(--muted); font-size:12px; line-height:1.4; }
+    .badge { display:inline-block; border:1px solid var(--border-dark); border-radius:4px; padding:4px 8px; font-size:12px; background:var(--soft); white-space:nowrap; }
+    .resource { display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; border:1px solid var(--border-dark); border-radius:6px; padding:16px; margin-bottom:12px; background:#fff; }
+    .resource .why { color:var(--muted); font-size:13px; margin-top:8px; line-height:1.4; }
+    .resource .actions { display:flex; flex-direction:column; gap:8px; align-items:stretch; }
+    .banner { border:1px dashed var(--border-dark); border-radius:6px; padding:14px 16px; background:#fafafa; margin-bottom:18px; font-size:14px; line-height:1.45; }
+    .banner strong { display:block; margin-bottom:4px; }
+    .topic-summary { border:1px solid var(--border-dark); border-radius:6px; padding:16px; margin-bottom:18px; display:grid; grid-template-columns:1fr auto; gap:16px; align-items:center; }
+    .topic-title { font-size:20px; font-weight:700; margin-bottom:5px; }
+    .footer-actions { border-top:1px solid var(--border); margin-top:18px; padding-top:14px; display:flex; justify-content:space-between; gap:10px; align-items:center; }
+    .hint { color:var(--muted); font-size:12px; max-width:560px; line-height:1.4; }
+    .btn-row { display:flex; gap:10px; flex-wrap:wrap; }
+    .rating { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+    .rate-opt { border:1px solid var(--border-dark); border-radius:6px; padding:18px; text-align:center; font-weight:700; background:#fff; }
+    .rate-opt.selected { background:var(--active); }
+    @media (max-width:1100px) { .app { width:100%; min-width:960px; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="clock" aria-hidden="true"></div>
+        <span>TimeWise</span>
+      </div>
+      <div class="profile">Post-Secondary Student ▾</div>
+    </header>
+
+    <aside class="sidebar">
+      <div class="nav-title">Navigation</div>
+      <nav class="nav">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#courses">Courses</a>
+        <a href="#study-plan">Study Plan</a>
+        <a href="#analytics">Analytics</a>
+        <a class="active" href="timewise_fa4_resource_request - Zain.html">Resources</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="page-head">
+        <div>
+          <h1>Recommended Learning Resources</h1>
+          <div class="subtext">Resources chosen for your request, ranked from most to least relevant.</div>
+        </div>
+        <a class="btn" href="timewise_fa4_resource_request - Zain.html">Edit Request</a>
+      </div>
+
+      <section class="topic-summary">
+        <div>
+          <div class="topic-title">Database normalization (3NF and BCNF)</div>
+          <div class="card-meta">INFO 4XXX · Database Systems · Related task: Database Assignment (due Oct 15)</div>
+        </div>
+        <div class="badge">3 resources found</div>
+      </section>
+
+      <section class="main-grid">
+        <div>
+          <div class="resource">
+            <div>
+              <div class="card-title">Normalization Explained: 1NF to BCNF</div>
+              <div class="card-meta">Video · 18 min · Provider: Open Courseware</div>
+              <div class="why">Why this? Matches your topic and your preference for video. Short enough to fit before tonight's study block.</div>
+            </div>
+            <div class="actions">
+              <span class="badge">Best match</span>
+              <a class="btn small primary" href="#open">Open Resource</a>
+              <a class="btn small" href="timewise_fa4_recommendation_feedback - Zain.html">Give Feedback</a>
+            </div>
+          </div>
+
+          <div class="resource">
+            <div>
+              <div class="card-title">BCNF vs 3NF: Worked Examples</div>
+              <div class="card-meta">Article · 12 min read · Provider: Database Guide</div>
+              <div class="why">Why this? Walks through the dependency problems you described with step-by-step examples.</div>
+            </div>
+            <div class="actions">
+              <span class="badge">Strong match</span>
+              <a class="btn small primary" href="#open">Open Resource</a>
+              <a class="btn small" href="timewise_fa4_recommendation_feedback - Zain.html">Give Feedback</a>
+            </div>
+          </div>
+
+          <div class="resource">
+            <div>
+              <div class="card-title">Normalization Practice Set (15 problems)</div>
+              <div class="card-meta">Practice problems · about 40 min · Provider: Study Hub</div>
+              <div class="why">Why this? Lets you practice after reviewing the concepts. Fits your Oct 14 study block.</div>
+            </div>
+            <div class="actions">
+              <span class="badge">Good match</span>
+              <a class="btn small primary" href="#open">Open Resource</a>
+              <a class="btn small" href="timewise_fa4_recommendation_feedback - Zain.html">Give Feedback</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>About these results</h2>
+          <div class="panel-subtext">Resources open on the provider's site. TimeWise does not copy provider content.</div>
+          <div class="card">
+            <div class="card-title">Estimated time to review</div>
+            <div class="card-meta">About 70 minutes for all three. Your next free study window is tonight, 8:30 PM.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Not what you needed?</div>
+            <div class="card-meta">Edit your request to change the topic or format, or give feedback so future results improve.</div>
+          </div>
+          <div class="btn-row">
+            <a class="btn small" href="timewise_fa4_resource_request - Zain.html">Edit Request</a>
+            <a class="btn small" href="timewise_fa4_fallback_recommendations - Zain.html">See general recommendations</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer-actions">
+        <div class="hint">Recommendations do not change your study plan. Linked use cases: UC-F10-01 Request Learning Resource Recommendations and UC-F10-02 Evaluate Recommendation Usefulness.</div>
+        <a class="btn primary" href="#dashboard">Back to Dashboard</a>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
