@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TimeWise — Why This? Explanation</title>
+  <style>
+    :root {
+      --bg: #f7f7f7;
+      --panel: #ffffff;
+      --border: #c9c9c9;
+      --border-dark: #8d8d8d;
+      --text: #222;
+      --muted: #666;
+      --soft: #ececec;
+      --active: #dedede;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); }
+    .app {
+      width: 1365px; min-height: 768px; margin: 0 auto; background: var(--panel);
+      border: 1px solid var(--border-dark); display: grid;
+      grid-template-columns: 220px 1fr; grid-template-rows: 70px 1fr;
+    }
+    .topbar {
+      grid-column: 1 / 3; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; border-bottom: 1px solid var(--border-dark); background: #fff;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 24px; }
+    .clock { width: 34px; height: 34px; border: 2px solid #333; border-radius: 50%; position: relative; }
+    .clock::before { content: ""; position: absolute; width: 2px; height: 9px; background: #333; left: 15px; top: 7px; }
+    .clock::after {
+      content: ""; position: absolute; width: 10px; height: 2px; background: #333;
+      left: 15px; top: 16px; transform: rotate(25deg); transform-origin: left center;
+    }
+    .profile { border: 1px solid var(--border-dark); border-radius: 6px; padding: 10px 14px; font-size: 14px; background: #fff; }
+    .sidebar { grid-row: 2; border-right: 1px solid var(--border-dark); padding: 20px 14px; background: #fafafa; }
+    .nav-title {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted); margin: 4px 10px 10px;
+    }
+    .nav a {
+      display: block; text-decoration: none; color: var(--text); border: 1px solid transparent;
+      padding: 12px 14px; margin-bottom: 6px; border-radius: 5px; font-size: 15px;
+    }
+    .nav a:hover { border-color: var(--border); }
+    .nav a.active { background: var(--active); border-color: var(--border-dark); font-weight: 700; }
+    .content { grid-column: 2; grid-row: 2; padding: 28px 34px 34px; background: #fff; }
+    .page-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 20px; margin-bottom: 20px;
+    }
+    h1 { margin: 0 0 6px; font-size: 30px; }
+    .subtext { color: var(--muted); font-size: 15px; line-height: 1.45; }
+    .btn {
+      display: inline-block; border: 1px solid var(--border-dark); background: #fff; color: var(--text);
+      text-decoration: none; border-radius: 5px; padding: 10px 14px; font-weight: 700;
+      font-size: 14px; cursor: pointer; white-space: nowrap;
+    }
+    .btn.primary { background: var(--soft); }
+    .task-summary {
+      border: 1px solid var(--border-dark); border-radius: 6px; padding: 16px; margin-bottom: 18px;
+      display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 16px; background: #fff;
+    }
+    .task-title { font-size: 20px; font-weight: 700; margin-bottom: 5px; }
+    .task-meta { color: var(--muted); font-size: 13px; }
+    .priority-badge {
+      border: 1px solid var(--border-dark); background: var(--soft); padding: 8px 12px;
+      border-radius: 4px; font-size: 13px; font-weight: 700;
+    }
+    .main-grid { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: 18px; align-items: start; }
+    .panel { border: 1px solid var(--border-dark); border-radius: 6px; padding: 18px; background: #fff; }
+    .panel h2 { margin: 0 0 8px; font-size: 18px; }
+    .panel-subtext { color: var(--muted); font-size: 13px; margin-bottom: 16px; line-height: 1.45; }
+    .factor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .factor {
+      border: 1px solid var(--border); border-radius: 5px; padding: 14px;
+      background: #fafafa; min-height: 102px;
+    }
+    .factor-label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .factor-value { font-size: 20px; font-weight: 700; margin-bottom: 5px; }
+    .factor-note { color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .explanation {
+      border: 1px solid var(--border); border-radius: 5px; background: #fafafa;
+      padding: 16px; font-size: 14px; line-height: 1.55; margin-bottom: 14px;
+    }
+    .explanation strong { display: block; font-size: 15px; margin-bottom: 8px; }
+    .plan-impact { border-top: 1px solid var(--border); padding-top: 14px; margin-top: 14px; }
+    .plan-impact h3 { margin: 0 0 10px; font-size: 15px; }
+    .study-block {
+      border: 1px solid var(--border); border-radius: 5px; background: #fafafa;
+      padding: 12px; margin-bottom: 10px;
+    }
+    .study-time { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+    .study-task { color: var(--muted); font-size: 12px; }
+    .footer-actions {
+      border-top: 1px solid var(--border); margin-top: 18px; padding-top: 14px;
+      display: flex; justify-content: space-between; gap: 10px; align-items: center;
+    }
+    .hint { color: var(--muted); font-size: 12px; max-width: 520px; line-height: 1.4; }
+    @media (max-width: 1100px) { .app { width: 100%; min-width: 960px; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="clock" aria-hidden="true"></div>
+        <span>TimeWise</span>
+      </div>
+      <div class="profile">Post-Secondary Student ▾</div>
+    </header>
+
+    <aside class="sidebar">
+      <div class="nav-title">Navigation</div>
+      <nav class="nav">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#courses">Courses</a>
+        <a class="active" href="#study-plan">Study Plan</a>
+        <a href="#analytics">Analytics</a>
+        <a href="#resources">Resources</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="page-head">
+        <div>
+          <h1>Why is this Priority 1?</h1>
+          <div class="subtext">
+            TimeWise explains the main factors that caused this task to be ranked ahead of your other academic work.
+          </div>
+        </div>
+        <a class="btn" href="#study-plan">Back to Study Plan</a>
+      </div>
+
+      <section class="task-summary">
+        <div>
+          <div class="task-title">Database Assignment</div>
+          <div class="task-meta">INFO 4XXX · Due Oct 15 · Assignment · Weight 25%</div>
+        </div>
+        <div class="priority-badge">High Priority · Rank 1</div>
+      </section>
+
+      <section class="main-grid">
+        <div class="panel">
+          <h2>Priority Factors</h2>
+          <div class="panel-subtext">
+            These factors are evaluated together; no single factor determines the result by itself.
+          </div>
+
+          <div class="factor-grid">
+            <div class="factor">
+              <div class="factor-label">Deadline Urgency</div>
+              <div class="factor-value">3 days</div>
+              <div class="factor-note">The deadline is approaching soon relative to the other current tasks.</div>
+            </div>
+
+            <div class="factor">
+              <div class="factor-label">Grade Weight</div>
+              <div class="factor-value">25%</div>
+              <div class="factor-note">This assignment has a substantial effect on the course grade.</div>
+            </div>
+
+            <div class="factor">
+              <div class="factor-label">Estimated Effort</div>
+              <div class="factor-value">4h</div>
+              <div class="factor-note">Enough remaining work must be scheduled before the deadline.</div>
+            </div>
+
+            <div class="factor">
+              <div class="factor-label">Difficulty</div>
+              <div class="factor-value">High</div>
+              <div class="factor-note">The task may require more focused study time than easier work.</div>
+            </div>
+
+            <div class="factor">
+              <div class="factor-label">Available Study Capacity</div>
+              <div class="factor-value">9h</div>
+              <div class="factor-note">Study time is limited once confirmed classes and commitments are excluded.</div>
+            </div>
+
+            <div class="factor">
+              <div class="factor-label">Remaining Buffer</div>
+              <div class="factor-value">2h</div>
+              <div class="factor-note">The current plan preserves only a small unscheduled buffer.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Plain-Language Explanation</h2>
+          <div class="panel-subtext">
+            This explanation is intended to help you understand and review the recommendation.
+          </div>
+
+          <div class="explanation">
+            <strong>Why Database Assignment is ranked first</strong>
+            This task is due sooner than your other current work, is worth 25% of the course grade, and still requires about 4 hours of focused effort. Because your available study capacity is limited after confirmed commitments are excluded, TimeWise recommends completing this work first while enough feasible study time remains before the deadline.
+          </div>
+
+          <div class="plan-impact">
+            <h3>How this priority affects your plan</h3>
+
+            <div class="study-block">
+              <div class="study-time">Mon Oct 12 · 6:00–8:00 PM</div>
+              <div class="study-task">Database Assignment</div>
+            </div>
+
+            <div class="study-block">
+              <div class="study-time">Tue Oct 13 · 7:00–9:00 PM</div>
+              <div class="study-task">Database Assignment</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer-actions">
+        <div class="hint">
+          You remain in control of the plan. Return to the Study Plan to adjust the recommended study blocks if needed.
+        </div>
+        <a class="btn primary" href="#study-plan">Back to Study Plan</a>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
