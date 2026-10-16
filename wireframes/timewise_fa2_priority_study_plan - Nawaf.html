@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TimeWise — Priority / Study Plan</title>
+  <style>
+    :root {
+      --bg: #f7f7f7;
+      --panel: #ffffff;
+      --border: #c9c9c9;
+      --border-dark: #8d8d8d;
+      --text: #222;
+      --muted: #666;
+      --soft: #ececec;
+      --active: #dedede;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      width: 1365px;
+      min-height: 768px;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--border-dark);
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      grid-template-rows: 70px 1fr;
+    }
+
+    .topbar {
+      grid-column: 1 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      border-bottom: 1px solid var(--border-dark);
+      background: #fff;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 24px;
+    }
+
+    .clock {
+      width: 34px;
+      height: 34px;
+      border: 2px solid #333;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .clock::before {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 9px;
+      background: #333;
+      left: 15px;
+      top: 7px;
+    }
+
+    .clock::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 2px;
+      background: #333;
+      left: 15px;
+      top: 16px;
+      transform: rotate(25deg);
+      transform-origin: left center;
+    }
+
+    .profile {
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .sidebar {
+      grid-row: 2;
+      border-right: 1px solid var(--border-dark);
+      padding: 20px 14px;
+      background: #fafafa;
+    }
+
+    .nav-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 4px 10px 10px;
+    }
+
+    .nav a {
+      display: block;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid transparent;
+      padding: 12px 14px;
+      margin-bottom: 6px;
+      border-radius: 5px;
+      font-size: 15px;
+    }
+
+    .nav a:hover { border-color: var(--border); }
+
+    .nav a.active {
+      background: var(--active);
+      border-color: var(--border-dark);
+      font-weight: 700;
+    }
+
+    .content {
+      grid-column: 2;
+      grid-row: 2;
+      padding: 28px 34px 34px;
+      background: #fff;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .subtext {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 720px;
+      line-height: 1.4;
+    }
+
+    .btn {
+      display: inline-block;
+      border: 1px solid var(--border-dark);
+      background: #fff;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 5px;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      background: var(--soft);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .summary-card {
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+      padding: 14px;
+      background: #fff;
+      min-height: 84px;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .summary-value {
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.45fr 0.95fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+      background: #fff;
+      padding: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .panel-subtext {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .task-card {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #fafafa;
+    }
+
+    .task-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .task-top {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .rank {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border-dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      background: #fff;
+    }
+
+    .task-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .task-meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .priority-badge {
+      border: 1px solid var(--border-dark);
+      background: var(--soft);
+      padding: 6px 9px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .task-details {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .detail {
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+      font-size: 12px;
+    }
+
+    .detail span {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .block {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 12px;
+      background: #fafafa;
+      margin-bottom: 10px;
+    }
+
+    .block-time {
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .block-task {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .capacity-note {
+      border: 1px dashed var(--border-dark);
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      background: #fafafa;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .accept-row {
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+      padding-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    @media (max-width: 1100px) {
+      .app {
+        width: 100%;
+        min-width: 960px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="clock" aria-hidden="true"></div>
+        <span>TimeWise</span>
+      </div>
+      <div class="profile">Post-Secondary Student ▾</div>
+    </header>
+
+    <aside class="sidebar">
+      <div class="nav-title">Navigation</div>
+      <nav class="nav">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#courses">Courses</a>
+        <a class="active" href="#study-plan">Study Plan</a>
+        <a href="#analytics">Analytics</a>
+        <a href="#resources">Resources</a>
+      </nav>
+    </aside>
+
+    <main class="content" id="study-plan">
+      <div class="page-head">
+        <div>
+          <h1>Priority / Study Plan</h1>
+          <div class="subtext">
+            Review your prioritized academic work, recommended study blocks, and the reasons behind the plan.
+          </div>
+        </div>
+        <a class="btn" href="#study-plan">Regenerate Plan</a>
+      </div>
+
+      <section class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-label">Available Study Capacity</div>
+          <div class="summary-value">9h</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-label">Planned Study Time</div>
+          <div class="summary-value">7h</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-label">Highest Priority</div>
+          <div class="summary-value">Database Assignment</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-label">Plan Status</div>
+          <div class="summary-value">Feasible</div>
+        </div>
+      </section>
+
+      <section class="main-grid">
+        <div class="panel">
+          <h2>Prioritized Academic Work</h2>
+          <div class="panel-subtext">
+            Priorities consider deadline urgency, grade weight, estimated effort, difficulty, and remaining study capacity.
+          </div>
+
+          <div class="task-card">
+            <div class="task-top">
+              <div class="rank">1</div>
+              <div>
+                <div class="task-title">Database Assignment</div>
+                <div class="task-meta">INFO 4XXX · Due Oct 15 · Assignment</div>
+              </div>
+              <div class="priority-badge">High Priority</div>
+            </div>
+
+            <div class="task-details">
+              <div class="detail"><span>Grade Weight</span>25%</div>
+              <div class="detail"><span>Estimated Effort</span>4h</div>
+              <div class="detail"><span>Difficulty</span>High</div>
+              <div class="detail"><span>Deadline</span>3 days</div>
+            </div>
+
+            <div class="action-row">
+              <a class="btn primary" href="#why">Why this?</a>
+              <a class="btn" href="#adjust">Adjust Study Block</a>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="task-top">
+              <div class="rank">2</div>
+              <div>
+                <div class="task-title">Theory of Computation Quiz</div>
+                <div class="task-meta">INFO 47546 · Due Oct 17 · Quiz</div>
+              </div>
+              <div class="priority-badge">Medium Priority</div>
+            </div>
+
+            <div class="task-details">
+              <div class="detail"><span>Grade Weight</span>10%</div>
+              <div class="detail"><span>Estimated Effort</span>1.5h</div>
+              <div class="detail"><span>Difficulty</span>Medium</div>
+              <div class="detail"><span>Deadline</span>5 days</div>
+            </div>
+
+            <div class="action-row">
+              <a class="btn primary" href="#why">Why this?</a>
+              <a class="btn" href="#adjust">Adjust Study Block</a>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="task-top">
+              <div class="rank">3</div>
+              <div>
+                <div class="task-title">Cloud Economics Lab</div>
+                <div class="task-meta">INFO 49971 · Due Oct 19 · Lab</div>
+              </div>
+              <div class="priority-badge">Medium Priority</div>
+            </div>
+
+            <div class="task-details">
+              <div class="detail"><span>Grade Weight</span>15%</div>
+              <div class="detail"><span>Estimated Effort</span>1.5h</div>
+              <div class="detail"><span>Difficulty</span>Medium</div>
+              <div class="detail"><span>Deadline</span>7 days</div>
+            </div>
+
+            <div class="action-row">
+              <a class="btn primary" href="#why">Why this?</a>
+              <a class="btn" href="#adjust">Adjust Study Block</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Recommended Study Blocks</h2>
+          <div class="panel-subtext">
+            Study blocks are placed only within available study windows and avoid confirmed commitments.
+          </div>
+
+          <div class="block">
+            <div class="block-time">Mon Oct 12 · 6:00–8:00 PM</div>
+            <div class="block-task">Database Assignment</div>
+          </div>
+
+          <div class="block">
+            <div class="block-time">Tue Oct 13 · 7:00–9:00 PM</div>
+            <div class="block-task">Database Assignment</div>
+          </div>
+
+          <div class="block">
+            <div class="block-time">Wed Oct 14 · 7:30–9:00 PM</div>
+            <div class="block-task">Theory of Computation Quiz</div>
+          </div>
+
+          <div class="block">
+            <div class="block-time">Thu Oct 15 · 6:30–8:00 PM</div>
+            <div class="block-task">Cloud Economics Lab</div>
+          </div>
+
+          <div class="capacity-note">
+            Confirmed classes, work, and blocked commitments are excluded from scheduling. Remaining unscheduled capacity: 2h.
+          </div>
+
+          <div class="accept-row">
+            <a class="btn" href="#dashboard">Cancel</a>
+            <a class="btn primary" href="#study-plan">Accept Plan</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
