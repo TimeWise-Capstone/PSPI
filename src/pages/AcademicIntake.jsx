@@ -32,7 +32,7 @@ export default function AcademicIntake() {
     if (!name || !code || !term) return;
 
     setCourses((current) =>
-      editingCourse
+      editingCourse?.id != null
         ? current.map((course) =>
             course.id === editingCourse.id
               ? { ...course, name, code, term }
@@ -159,6 +159,25 @@ export default function AcademicIntake() {
           >
             Return to Overview
           </button>
+          <button
+  className="btn primary"
+  type="button"
+  disabled={!documentFile}
+  onClick={() => {
+    setEditingCourse({
+      name: "Sample Programming Course",
+      code: "PROG 3001",
+      term: "Fall 2026",
+    });
+
+    setDocumentFile(null);
+    setDocumentError("");
+    setShowUpload(false);
+    setShowForm(true);
+  }}
+>
+  Preview Sample Import
+</button>
         </div>
       </div>
     </section>
@@ -311,7 +330,20 @@ export default function AcademicIntake() {
   if (showForm) {
     return (
       <section className="ai-page">
-        <h1>{editingCourse ? "Edit Course" : "Add Course"}</h1>
+        <h1>
+  {editingCourse?.id != null
+    ? "Edit Course"
+    : editingCourse
+      ? "Review Sample Import"
+      : "Add Course"}
+</h1>
+
+{editingCourse && editingCourse.id == null && (
+  <p className="muted">
+    These are sample values, not information extracted from your PDF.
+    Review and change them before saving.
+  </p>
+)}
         <p className="subtext">Enter your course information.</p>
 
         <form className="panel ai-form" onSubmit={saveCourse}>
