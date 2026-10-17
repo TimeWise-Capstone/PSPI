@@ -252,7 +252,11 @@ export default function AcademicIntake() {
             <p>{course.assessments.length} assessments</p>
             {course.assessments.map((assessment) => (
   <div className="ai-assessment" key={assessment.id}>
-    <strong>{assessment.name}</strong>
+    <div className="ai-assessment-header">
+  <strong>{assessment.name}</strong>
+
+
+</div>
 
 <button
   className="btn"

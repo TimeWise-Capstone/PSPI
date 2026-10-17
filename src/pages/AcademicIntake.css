@@ -60,3 +60,11 @@
 .ai-details dd {
   margin: 0;
 }
+
+.ai-assessment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
