@@ -1,0 +1,36 @@
+.ai-page {
+  width: 100%;
+}
+
+.ai-course-list {
+  display: grid;
+  gap: 14px;
+}
+
+.ai-form {
+  max-width: 640px;
+  display: grid;
+  gap: 18px;
+}
+
+.ai-form label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ai-form input {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border-dark);
+  border-radius: 4px;
+  font: inherit;
+  font-weight: 400;
+}
+
+.ai-form input:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
