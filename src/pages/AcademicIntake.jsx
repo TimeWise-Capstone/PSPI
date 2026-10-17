@@ -13,6 +13,9 @@ export default function AcademicIntake() {
   ]);
 
   const [showForm, setShowForm] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
+  const [documentFile, setDocumentFile] = useState(null);
+  const [documentError, setDocumentError] = useState("");
   const [editingCourse, setEditingCourse] = useState(null);
   const [assessmentCourseId, setAssessmentCourseId] = useState(null);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
@@ -87,7 +90,80 @@ export default function AcademicIntake() {
     setAssessmentCourseId(null);
     setEditingAssessment(null);
   }
+  if (showUpload) {
+  return (
+    <section className="ai-page">
+      <h1>Upload Academic Document</h1>
+      <p className="subtext">
+        Select a course syllabus PDF to begin academic intake.
+      </p>
 
+      <div className="panel ai-form">
+        <label>
+          Select a PDF Document
+          <input
+            type="file"
+            accept=".pdf,application/pdf"
+            aria-describedby="document-status"
+            onChange={(event) => {
+              const file = event.target.files[0];
+
+              setDocumentFile(null);
+              setDocumentError("");
+
+              if (!file) return;
+
+              if (!file.name.toLowerCase().endsWith(".pdf")) {
+                setDocumentError("Please select a PDF document.");
+                event.target.value = "";
+                return;
+              }
+
+              if (file.size === 0 || file.size > 10 * 1024 * 1024) {
+                setDocumentError(
+                  "Select a non-empty PDF no larger than 10 MB."
+                );
+                event.target.value = "";
+                return;
+              }
+
+              setDocumentFile(file);
+            }}
+          />
+        </label>
+
+        <div id="document-status" aria-live="polite">
+          {documentError && <p role="alert">{documentError}</p>}
+
+          <p>
+            {documentFile
+              ? `Selected: ${documentFile.name}`
+              : "Ready to select a document. Maximum size: 10 MB."}
+          </p>
+        </div>
+
+        <p className="muted">
+          UI prototype: files are selected locally. Uploading and
+          automatic extraction are not connected.
+        </p>
+
+        <div className="btn-row">
+          <button
+            className="btn"
+            type="button"
+            onClick={() => {
+              setShowUpload(false);
+              setDocumentFile(null);
+              setDocumentError("");
+            }}
+          >
+            Return to Overview
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
   if (selectedAssessment !== null) {
     return (
       <section className="ai-page">
@@ -309,6 +385,13 @@ export default function AcademicIntake() {
         >
           Add Course
         </button>
+        <button
+  className="btn"
+  type="button"
+  onClick={() => setShowUpload(true)}
+>
+  Upload Document
+</button>
       </div>
 
       <h2 className="section-title">My Courses</h2>
