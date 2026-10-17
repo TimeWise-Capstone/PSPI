@@ -15,6 +15,7 @@ export default function AcademicIntake() {
   const [showForm, setShowForm] = useState(false);
   const [assessmentCourseId, setAssessmentCourseId] = useState(null);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [editingAssessment, setEditingAssessment] = useState(null);
   function saveCourse(event) {
     event.preventDefault();
 
@@ -63,13 +64,20 @@ export default function AcademicIntake() {
       course.id === assessmentCourseId
         ? {
             ...course,
-            assessments: [...course.assessments, assessment],
+            assessments: editingAssessment
+  ? course.assessments.map((existing) =>
+      existing.id === editingAssessment.id
+        ? { ...assessment, id: existing.id }
+        : existing
+    )
+  : [...course.assessments, assessment],
           }
         : course
     )
   );
 
   setAssessmentCourseId(null);
+  setEditingAssessment(null);
 }
   if (selectedAssessment !== null) {
   return (
@@ -81,6 +89,17 @@ export default function AcademicIntake() {
 
       <div className="panel">
         <h2>{selectedAssessment.name}</h2>
+        <button
+  className="btn"
+  type="button"
+  onClick={() => {
+    setEditingAssessment(selectedAssessment);
+    setAssessmentCourseId(selectedAssessment.courseId);
+    setSelectedAssessment(null);
+  }}
+>
+  Edit Assessment
+</button>
 
         <dl className="ai-details">
           <div>
@@ -124,7 +143,7 @@ export default function AcademicIntake() {
 
   return (
     <section className="ai-page">
-      <h1>Add Assessment</h1>
+      <h1>{editingAssessment ? "Edit Assessment" : "Add Assessment"}</h1>
       <p className="subtext">
         Add an assessment for {course.code}.
       </p>
@@ -132,12 +151,20 @@ export default function AcademicIntake() {
       <form className="panel ai-form" onSubmit={saveAssessment}>
         <label>
           Assessment Name
-          <input name="name" required pattern=".*\S.*" />
+          <input
+  name="name"
+  defaultValue={editingAssessment?.name ?? ""}
+  required
+  pattern=".*\S.*"
+/>
         </label>
 
         <label>
           Assessment Type
-          <select name="type">
+          <select
+  name="type"
+  defaultValue={editingAssessment?.type ?? "Assignment"}
+>
             <option>Assignment</option>
             <option>Quiz</option>
             <option>Exam</option>
@@ -148,13 +175,19 @@ export default function AcademicIntake() {
 
         <label>
           Due Date
-          <input name="dueDate" type="date" required />
+          <input
+  name="dueDate"
+  type="date"
+  defaultValue={editingAssessment?.dueDate ?? ""}
+  required
+/>
         </label>
 
         <label>
           Grade Weight (%)
           <input
             name="weight"
+            defaultValue={editingAssessment?.weight ?? ""}
             type="number"
             min="0"
             max="100"
@@ -167,7 +200,10 @@ export default function AcademicIntake() {
           <button
             className="btn"
             type="button"
-            onClick={() => setAssessmentCourseId(null)}
+            onClick={() => {
+  setAssessmentCourseId(null);
+  setEditingAssessment(null);
+}}
           >
             Cancel
           </button>
@@ -264,6 +300,7 @@ export default function AcademicIntake() {
   onClick={() =>
     setSelectedAssessment({
       ...assessment,
+      courseId: course.id,
       courseCode: course.code,
     })
   }
