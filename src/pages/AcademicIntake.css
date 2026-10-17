@@ -34,3 +34,29 @@
   outline: 2px solid var(--text);
   outline-offset: 2px;
 }
+
+.ai-assessment {
+  border-top: 1px solid var(--border);
+  padding: 14px 0;
+}
+
+.ai-assessment p {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+
+.ai-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.ai-details dt {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.ai-details dd {
+  margin: 0;
+}
